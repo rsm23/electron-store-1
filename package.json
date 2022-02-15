@@ -35,7 +35,8 @@
 	],
 	"dependencies": {
 		"conf": "^10.0.3",
-		"type-fest": "^1.0.2"
+		"type-fest": "^1.0.2",
+		"@electron/remote": "^2.0.4"
 	},
 	"devDependencies": {
 		"ava": "^2.4.0",
