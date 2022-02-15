@@ -1,19 +1,20 @@
 'use strict';
 const path = require('path');
-const {app, ipcMain, ipcRenderer, shell} = require('electron');
+const {ipcMain, ipcRenderer, shell} = require('electron');
+const remote = require('@electron/remote');
 const Conf = require('conf');
 
 let isInitialized = false;
 
 // Set up the `ipcMain` handler for communication between renderer and main process.
 const initDataListener = () => {
-	if (!ipcMain || !app) {
+	if (!ipcMain || !remote.app || !remote.remote.app) {
 		throw new Error('Electron Store: You need to call `.initRenderer()` from the main process.');
 	}
 
 	const appData = {
-		defaultCwd: app.getPath('userData'),
-		appVersion: app.getVersion()
+		defaultCwd: (remote.app || remote.remote.app).getPath('userData'),
+		appVersion: (remote.app || remote.remote.app).getVersion()
 	};
 
 	if (isInitialized) {
@@ -44,7 +45,7 @@ class ElectronStore extends Conf {
 			}
 
 			({defaultCwd, appVersion} = appData);
-		} else if (ipcMain && app) {
+		} else if (ipcMain && (remote.app || remote.remote.app)) {
 			({defaultCwd, appVersion} = initDataListener());
 		}
 
